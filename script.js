@@ -1,7 +1,7 @@
 var bardata = [];
 
 for (var i = 0; i <= 50; i++) {
-    bardata.push(Math.random()*30);
+    bardata.push(Math.round(Math.random()*30) + 10);
 }
 
 var height = 400,
@@ -16,6 +16,12 @@ var yScale = d3.scale.linear()
 var xScale = d3.scale.ordinal()
     .domain(d3.range(0,bardata.length))
     .rangeBands([0, width]);
+
+var tooltip = d3.select('body').append('div')
+    .style('position', 'absolute')
+    .style('padding', '0 10px')
+    .style('background', '#FFFFFF')
+    .style('opacity', 0);
 
 var colors = d3.scale.linear()
     .domain([0, d3.max(bardata)])
@@ -41,6 +47,11 @@ var myChart = d3.select('#chart').append('svg')
             return xScale(i);
         })
         .on('mouseover', function (d) {
+            tooltip.transition()
+                .style('opacity', .9)
+            tooltip.html(d)
+                .style('left', (d3.event.pageX - 35) + 'px')
+                .style('top', (d3.event.pageY) + 'px')
             tempColor = this.style.fill
             d3.select(this)
                 .transition()
