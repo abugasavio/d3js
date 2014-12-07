@@ -18,7 +18,7 @@ var yScale = d3.scale.linear()
     .range([0, height]);
 
 var xScale = d3.scale.ordinal()
-    .domain(d3.range(0,bardata.length))
+    .domain(d3.range(0, bardata.length))
     .rangeBands([0, width]);
 
 var tooltip = d3.select('body').append('div')
@@ -94,12 +94,25 @@ var vAxis = d3.svg.axis()
     .orient('left')
     .ticks(10)
 
-
-
 var vGuide = d3.select('svg').append('g')
     vAxis(vGuide)
     vGuide.attr('transform', 'translate(35, 10)')
     vGuide.selectAll('path')
         .style({fill: 'none', stroke: '#000'})
     vGuide.selectAll('line')
+        .style({stroke: '#000'});
+
+var hAxis = d3.svg.axis()
+    .scale(xScale)
+    .orient('bottom')
+    .tickValues(xScale.domain().filter(function(d, i) {
+        return !(i % (bardata.length/5));
+    }));
+
+var hGuide = d3.select('svg').append('g')
+    hAxis(hGuide)
+    hGuide.attr('transform', 'translate(0, ' + (height-30)+')')
+    hGuide.selectAll('path')
+        .style({fill: 'none', stroke: '#000'})
+    hGuide.selectAll('line')
         .style({stroke: '#000'})
