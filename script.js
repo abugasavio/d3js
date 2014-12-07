@@ -1,4 +1,8 @@
-var bardata = [20, 30, 80, 15, 12,20, 20, 30, 70, 15, 12,20,20, 30, 10, 15, 12,20];
+var bardata = [];
+
+for (var i = 0; i <= 50; i++) {
+    bardata.push(Math.random()*30);
+}
 
 var height = 400,
     width = 600,
@@ -24,21 +28,17 @@ var colors = d3.scale.linear()
 
 var tempColor;
 
-d3.select('#chart').append('svg')
+var myChart = d3.select('#chart').append('svg')
     .attr('width', width)
     .attr('height', height)
     .selectAll('rect').data(bardata)
     .enter().append('rect')
         .style('fill', colors)
         .attr('width', xScale.rangeBand())
-        .attr('height', function (d) {
-            return yScale(d);
-        })
+        .attr('height', 0)
+        .attr('y', height)
         .attr('x', function (d, i) {
             return xScale(i);
-        })
-        .attr('y', function (d, i) {
-            return height - yScale(d);
         })
         .on('mouseover', function (d) {
             tempColor = this.style.fill
@@ -54,59 +54,16 @@ d3.select('#chart').append('svg')
             .style('fill', tempColor)
         });
 
-/*var myStyles = [
-    {width: 150,
-     name: 'Migel Wakanyi',
-     color: '#268BD2'
-    },
-    {width: 100,
-     name: 'Xavier',
-     color: '#FF6600'
-    },
-    {width: 220,
-     name: 'Josephus',
-     color: '#0099ff'
-    },
-    {width: 200,
-     name: 'Xerxe',
-     color: '#ff6600'
-    },
-    {width: 200,
-     name: 'Andego',
-     color: '#0099ff'
-    }];
 
-
-d3.selectAll('#chart')
-    .data(myStyles).selectAll('div')
-    .enter().append('div')
-    .classed('item', true)
-    .text(function (d) {
-        return d.name;
+myChart.transition()
+    .attr('height', function (d) {
+        return yScale(d);
     })
-    .style({'color': '#ffffff',
-            'background': function (d) {
-            return d.color;},
-            'width': function (d) {
-            return d.width + "px";}
-            });
-
-
-d3.select("#chart")
-    .append('svg')
-        .attr('width', 600)
-        .attr('height', 800)
-        .style('background', '#93A1A1')
-    .append("rect")
-        .attr('x', 200)
-        .attr('y', 200)
-        .attr('height', 200)
-        .attr('width', 200)
-        .style('fill', "#ff6600")
-    d3.select('svg')
-        .append('circle')
-            .attr('cx', 300)
-            .attr('cy', 200)
-            .attr('r', 50)
-            .style('fill', '#840043')
-*/
+    .attr('y', function (d) {
+        return height - yScale(d);
+    })
+    .delay(function (d, i) {
+        return i * 20;
+    })
+    .duration(1000)
+    .ease('elastic')
